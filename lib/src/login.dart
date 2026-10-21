@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'dashboard.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -22,8 +25,9 @@ class _LoginPageState extends State<LoginPage> {
   void _signIn() {
     if (!_formKey.currentState!.validate()) return;
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Welcome back!')));
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(builder: (_) => const DashboardPage()),
+    );
   }
 
   @override
@@ -68,14 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                           Text(
                             'Sign in to your account.',
                             style: Theme.of(context).textTheme.bodyLarge
-                                ?.copyWith(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    190,
-                                    214,
-                                    189,
-                                  ),
-                                ),
+                                ?.copyWith(color: Colors.black54),
                           ),
                           const SizedBox(height: 28),
                           const Text(
@@ -159,11 +156,12 @@ class _LoginPageState extends State<LoginPage> {
                             child: const Text('Sign in'),
                           ),
                           const SizedBox(height: 24),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
                               Text(
-                                'Dont have an account?',
+                                'Don’t have an account?',
                                 style: TextStyle(color: Colors.grey.shade700),
                               ),
                               TextButton(

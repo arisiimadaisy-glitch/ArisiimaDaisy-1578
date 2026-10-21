@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// Firebase imports - commented out until Firebase is configured
+// import 'package:firebase_core/firebase_core.dart';
+// import 'firebase_options.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/routes/app_router.dart';
 import 'core/constants/app_constants.dart';
 
-void main() {
+void main() async {
+  // Initialize Flutter bindings
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // TODO: Initialize Firebase after running: flutterfire configure
+  // Uncomment these lines after configuration:
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+
   runApp(const MyApp());
 }
 
@@ -45,7 +57,9 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   void toggleTheme() {
-    _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    _themeMode = _themeMode == ThemeMode.light
+        ? ThemeMode.dark
+        : ThemeMode.light;
     notifyListeners();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../constants/app_constants.dart';
 
 /// App theme configuration for light and dark modes
@@ -25,10 +26,10 @@ class AppTheme {
         surface: Colors.white,
         background: _backgroundLight,
       ),
-      
+
       // Text theme
       textTheme: _buildTextTheme(Brightness.light),
-      
+
       // App bar theme
       appBarTheme: AppBarTheme(
         elevation: 0,
@@ -42,16 +43,14 @@ class AppTheme {
           letterSpacing: -0.6,
         ),
       ),
-      
+
       // Card theme
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         color: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(28),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
-      
+
       // Elevated button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -62,13 +61,10 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
-      
+
       // Filled button theme (for primary actions)
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -79,24 +75,18 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
-      
+
       // Text button theme
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppConstants.ugandaGreen,
-          textStyle: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
       ),
-      
+
       // Input decoration theme
       inputDecorationTheme: InputDecorationTheme(
         filled: false,
@@ -110,7 +100,10 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppConstants.ugandaGreen, width: 2),
+          borderSide: const BorderSide(
+            color: AppConstants.ugandaGreen,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -120,23 +113,21 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppConstants.ugandaRed, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
       ),
-      
+
       // Chip theme
       chipTheme: ChipThemeData(
         backgroundColor: Colors.transparent,
         selectedColor: _ink,
         side: BorderSide(color: Colors.grey.shade400),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
-        labelStyle: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
       ),
-      
+
       // Bottom navigation bar theme
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
@@ -153,7 +144,7 @@ class AppTheme {
         type: BottomNavigationBarType.fixed,
         elevation: 0,
       ),
-      
+
       // Divider theme
       dividerTheme: const DividerThemeData(
         color: Color(0xFFE8E8E6),
@@ -177,10 +168,10 @@ class AppTheme {
         surface: const Color(0xFF2A2A2A),
         background: _backgroundDark,
       ),
-      
+
       // Text theme
       textTheme: _buildTextTheme(Brightness.dark),
-      
+
       // App bar theme
       appBarTheme: AppBarTheme(
         elevation: 0,
@@ -194,16 +185,14 @@ class AppTheme {
           letterSpacing: -0.6,
         ),
       ),
-      
+
       // Card theme
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         color: const Color(0xFF2A2A2A),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(28),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
-      
+
       // Elevated button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -214,13 +203,10 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
-      
+
       // Filled button theme
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -231,24 +217,18 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
-      
+
       // Text button theme
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppConstants.ugandaGreen,
-          textStyle: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
       ),
-      
+
       // Input decoration theme
       inputDecorationTheme: InputDecorationTheme(
         filled: false,
@@ -262,7 +242,10 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppConstants.ugandaGreen, width: 2),
+          borderSide: const BorderSide(
+            color: AppConstants.ugandaGreen,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -272,23 +255,21 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppConstants.ugandaRed, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
       ),
-      
+
       // Chip theme
       chipTheme: ChipThemeData(
         backgroundColor: Colors.transparent,
         selectedColor: Colors.white,
         side: const BorderSide(color: Color(0xFF444444)),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
-        labelStyle: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
       ),
-      
+
       // Bottom navigation bar theme
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: Color(0xFF2A2A2A),
@@ -305,7 +286,7 @@ class AppTheme {
         type: BottomNavigationBarType.fixed,
         elevation: 0,
       ),
-      
+
       // Divider theme
       dividerTheme: const DividerThemeData(
         color: Color(0xFF333333),
@@ -318,7 +299,9 @@ class AppTheme {
   /// Build text theme for the specified brightness
   static TextTheme _buildTextTheme(Brightness brightness) {
     final baseColor = brightness == Brightness.light ? _ink : Colors.white;
-    final mutedColor = brightness == Brightness.light ? _muted : const Color(0xFF888888);
+    final mutedColor = brightness == Brightness.light
+        ? _muted
+        : const Color(0xFF888888);
 
     return TextTheme(
       displayLarge: TextStyle(

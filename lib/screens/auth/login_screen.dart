@@ -161,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
                               Text(
-                                'Don't have an account?',
+                                "Don't have an account?",
                                 style: TextStyle(color: Colors.grey.shade700),
                               ),
                               TextButton(
