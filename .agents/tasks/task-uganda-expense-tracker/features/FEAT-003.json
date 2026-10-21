@@ -1,0 +1,38 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Authentication screens: splash, onboarding, login, and registration. Creates splash_screen.dart with app logo and Firebase initialization, onboarding_screen.dart with 3 intro slides (track expenses, multi-currency, insights), updates existing login_screen.dart to integrate Firebase Auth and Google Sign-In with proper error handling, creates register_screen.dart with email/password/confirm fields, forgot_password_screen.dart with email reset. All screens follow Material 3 design with Uganda color scheme. Implements proper navigation flow: splash -> onboarding (first launch only) -> login -> home.",
+  "status": "pending",
+  "steps": [
+    "Create lib/screens/splash/splash_screen.dart: StatefulWidget with centered app logo (use Icon or Image.asset), app name 'Pocket Spend', version text, initializeApp() method that calls Firebase.initializeApp(), checks if first launch (shared_preferences), navigates to onboarding or login after 2 seconds",
+    "Create lib/screens/onboarding/onboarding_screen.dart: PageView with 3 pages - page 1: 'Track Your Expenses' with wallet icon, page 2: 'Multi-Currency Support' with globe icon, page 3: 'Get Insights' with chart icon. Each page has title, description, illustration. Bottom: page indicators and 'Get Started' button on last page, 'Skip' button on others",
+    "Update lib/screens/auth/login_screen.dart: integrate auth_provider for signInWithEmail and signInWithGoogle, add Google sign-in button below form, show CircularProgressIndicator during loading, show SnackBar for errors, navigate to home on success, add 'Don't have account?' link to register screen",
+    "Create lib/screens/auth/register_screen.dart: form with name, email, password, confirm password fields using validators from core/utils, call auth_provider.signUpWithEmail, show success message and navigate to home, 'Already have account?' link to login",
+    "Create lib/screens/auth/forgot_password_screen.dart: single email field, 'Reset Password' button calls auth_service.sendPasswordResetEmail, show success dialog with instructions, back button to login",
+    "Update lib/main.dart: set initialRoute to '/splash', ensure routes are properly configured",
+    "Add shared_preferences ^2.2.0 to pubspec.yaml for first-launch detection"
+  ],
+  "acceptance_criteria": [
+    "Splash screen displays for 2 seconds and navigates correctly",
+    "Onboarding only shows on first app launch",
+    "Login with email/password works and navigates to home",
+    "Google Sign-In button triggers Google auth flow",
+    "Registration creates new user and logs them in",
+    "Forgot password sends reset email",
+    "All error messages are user-friendly",
+    "Loading states show spinners",
+    "Navigation flow is correct: splash -> onboarding (first time) or login -> home"
+  ],
+  "verification": [
+    "Run 'flutter analyze' and confirm zero issues",
+    "Run 'flutter run' on emulator",
+    "Test first launch: see splash -> onboarding -> login",
+    "Test subsequent launch: see splash -> login (skip onboarding)",
+    "Test registration with new email",
+    "Test login with created account",
+    "Test Google Sign-In (requires Firebase setup)",
+    "Test forgot password sends email"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

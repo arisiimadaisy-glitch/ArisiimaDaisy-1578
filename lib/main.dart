@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'src/login.dart';
+import 'core/theme/app_theme.dart';
+import 'core/routes/app_router.dart';
+import 'core/constants/app_constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,17 +14,38 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'DAISY APP login',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 17, 189, 46),
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, _) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: AppConstants.appName,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeProvider.themeMode,
+            initialRoute: AppRoutes.splash,
+            onGenerateRoute: AppRouter.generateRoute,
+          );
+        },
       ),
-      home: const LoginPage(),
     );
+  }
+}
+
+/// Theme provider for managing app theme mode
+class ThemeProvider extends ChangeNotifier {
+  ThemeMode _themeMode = ThemeMode.light;
+
+  ThemeMode get themeMode => _themeMode;
+
+  void setThemeMode(ThemeMode mode) {
+    _themeMode = mode;
+    notifyListeners();
+  }
+
+  void toggleTheme() {
+    _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
   }
 }

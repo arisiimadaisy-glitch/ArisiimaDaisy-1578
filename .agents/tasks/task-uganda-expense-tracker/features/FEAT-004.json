@@ -1,0 +1,45 @@
+{
+  "id": "FEAT-004",
+  "type": "feat",
+  "description": "Expense management screens: home dashboard, add/edit expense, expense list, expense detail. Updates home_screen.dart to show real data from expense_provider with summary cards (total spent, expense count, top category), bar chart using fl_chart for weekly spending, recent expenses list, FAB to add expense, bottom navigation. Creates add_expense_screen.dart with amount input, currency selector dropdown, category picker, date picker, note field, optional receipt image upload with image_picker. Creates expense_list_screen.dart with filter chips (date ranges, categories), search bar, grouped list by date, swipe-to-delete. Creates expense_detail_screen.dart showing all expense info, receipt image if present, edit/delete actions.",
+  "status": "pending",
+  "steps": [
+    "Create lib/widgets/common/currency_selector.dart: reusable dropdown showing currency code and symbol, uses currencies from app_constants",
+    "Create lib/widgets/common/category_picker.dart: GridView showing category icons with colors, allows selection, highlights selected",
+    "Create lib/widgets/common/date_filter_chips.dart: horizontal scrollable chips for Today, This Week, This Month, This Year, Custom (opens date range picker)",
+    "Create lib/widgets/common/expense_card.dart: reusable Card widget displaying expense with category icon, amount with currency, date, note preview, tap to open detail",
+    "Create lib/screens/expense/add_expense_screen.dart: Scaffold with form, TextFormField for amount (number keyboard), CurrencySelector, CategoryPicker (opens bottom sheet), DatePicker (defaults to today), TextField for note, ImagePicker button for receipt (shows thumbnail after selection), Save button calls expense_provider.addExpense, shows loading, handles errors, pops on success",
+    "Create lib/screens/expense/edit_expense_screen.dart: same as add_expense but pre-fills fields from Expense object passed as argument, Save button calls expense_provider.updateExpense",
+    "Create lib/screens/expense/expense_list_screen.dart: AppBar with search TextField, DateFilterChips below AppBar, category filter icon button (opens bottom sheet with category list), StreamBuilder or Consumer for expense_provider.expenses, ListView.builder grouped by date headers, each item is ExpenseCard, FloatingActionButton to add expense, empty state when no expenses",
+    "Create lib/screens/expense/expense_detail_screen.dart: shows all expense fields, receipt image if present (cached_network_image with zoom on tap), Edit FAB, Delete action in AppBar menu (shows confirmation dialog), back button",
+    "Update lib/screens/home/home_screen.dart: replace hardcoded data with Consumer<ExpenseProvider>, summary row with 3 cards (total spent this month, expense count, top category), BarChart from fl_chart showing last 7 days spending, 'Recent Expenses' section with ListView of last 5 expenses as ExpenseCards, bottom navigation with 5 items (Home, Expenses, Add [FAB], Reports, Profile), navigate to respective screens",
+    "Create lib/widgets/common/summary_card.dart: reusable Card with title, value, icon, used in home dashboard",
+    "Create lib/widgets/common/spending_chart.dart: wraps fl_chart BarChart, takes List<Expense>, groups by day, shows last 7 days, formatted amounts on Y-axis"
+  ],
+  "acceptance_criteria": [
+    "Home dashboard displays correct totals from expense_provider",
+    "Chart shows spending for last 7 days with correct values",
+    "Add expense saves to Firestore and updates UI immediately",
+    "Edit expense updates existing expense correctly",
+    "Receipt image uploads to Firebase Storage and URL saves to expense",
+    "Expense list filters work (date range, category, search)",
+    "Expense detail shows all info including image",
+    "Delete expense removes from Firestore and updates UI",
+    "Bottom navigation switches between screens",
+    "Empty states show helpful messages"
+  ],
+  "verification": [
+    "Run 'flutter analyze' and confirm zero issues",
+    "Run 'flutter run' on emulator",
+    "Login and navigate to home - verify dashboard loads",
+    "Tap Add FAB, fill form, save - verify expense appears",
+    "Tap expense card - verify detail screen shows",
+    "Edit expense - verify changes save",
+    "Delete expense - verify it's removed",
+    "Apply date/category filters - verify list updates",
+    "Upload receipt image - verify it appears in detail screen",
+    "Test bottom navigation - verify all tabs work"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

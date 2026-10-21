@@ -1,0 +1,20 @@
+{
+  "project_type": "Flutter mobile application with Firebase backend",
+  "language": "Dart",
+  "build_system": "Flutter SDK with pub package manager",
+  "test_framework": "flutter_test (built-in unit testing), flutter_driver for integration tests",
+  "build_command": "flutter build apk --release (for Android), flutter build ios --release (for iOS)",
+  "test_command": "flutter test (unit tests), flutter analyze (static analysis)",
+  "verification_instructions": "1. Run 'flutter analyze' to check for code issues. 2. Run 'flutter test' to execute unit tests. 3. Run 'flutter run' on emulator/device to verify UI and functionality. 4. Check Firebase console for auth/database connections.",
+  "snapshot_or_generated_files": "None currently. Firebase configuration files (google-services.json for Android, GoogleService-Info.plist for iOS) will be added but not checked in per Firebase best practices.",
+  "environment_constraints": "Flutter SDK 3.13.2+, Firebase project must be created manually, Firebase CLI required for initial setup, Android Studio/Xcode required for platform-specific builds",
+  "contribution_requirements": "No CONTRIBUTING.md or AGENTS.md found. Standard Flutter best practices apply: follow effective Dart style guide, maintain file structure separation (models, services, screens, widgets), use meaningful variable names, comment complex logic.",
+  "key_patterns": "Existing code uses: Material 3 design with green theme (Color.fromARGB(255, 17, 189, 46) as seed), StatefulWidget pattern for state management, custom color palette (_ink, _muted, _purple), manual navigation with Navigator.pushReplacement, form validation with GlobalKey<FormState>, custom card-based UI with rounded corners (BorderRadius.circular(28)), SafeArea for system UI padding",
+  "relevant_files": [
+    "lib/main.dart - app entry point, MaterialApp configuration",
+    "lib/src/login.dart - existing login UI (no real auth)",
+    "lib/src/dashboard.dart - existing dashboard with categories list, bottom nav, period selector",
+    "pubspec.yaml - dependencies configuration"
+  ],
+  "directory_structure": "lib/ contains main.dart and lib/src/ subdirectory. Current structure is flat (only 2 screens). Will expand to: lib/core/ (constants, theme, utils, routes), lib/models/, lib/services/, lib/providers/, lib/screens/ (splash, auth, home, expense, categories, settings, reports, profile), lib/widgets/common/"
+}

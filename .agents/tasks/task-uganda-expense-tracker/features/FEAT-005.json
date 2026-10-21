@@ -1,0 +1,46 @@
+{
+  "id": "FEAT-005",
+  "type": "feat",
+  "description": "Categories management, settings, reports/analytics, and profile screens (final 4 screens to reach 10+ total). Creates categories_screen.dart for viewing/adding/editing/deleting custom categories with icon and color pickers. Creates settings_screen.dart for currency selection, theme toggle (light/dark), language (future), notifications toggle, data export. Creates reports_screen.dart with pie chart showing spending by category, line chart for monthly trends, top spending categories list, date range selector. Creates profile_screen.dart showing user info, avatar, email, member since date, total expenses count, edit profile action, sign out button. Implements complete category customization with icon picker (Material Icons) and color picker widgets.",
+  "status": "pending",
+  "steps": [
+    "Create lib/widgets/common/icon_picker_dialog.dart: dialog with GridView of common Material Icons (payment, food, transport, shopping, health, entertainment, home, work, gift, etc. - at least 30 icons), returns selected IconData",
+    "Create lib/widgets/common/color_picker_dialog.dart: dialog with GridView of predefined colors (Material colors + Uganda theme colors), returns selected Color",
+    "Create lib/screens/categories/categories_screen.dart: AppBar with 'Categories' title, ListView of categories from category_provider (default categories marked, custom ones with edit/delete), each item shows icon, color, name, expense count for that category, FAB to add category, tap to edit, swipe to delete custom categories (default ones can't be deleted)",
+    "Create lib/screens/categories/add_category_screen.dart: form with name TextField, icon picker button (opens IconPickerDialog), color picker button (opens ColorPickerDialog), Save button calls category_provider.addCategory, validation for required fields",
+    "Create lib/screens/categories/edit_category_screen.dart: same as add but pre-fills from Category object, updates instead of adding",
+    "Create lib/screens/settings/settings_screen.dart: ListTile groups - Account section (currency selector, profile link), Appearance section (theme mode toggle - light/dark/system, uses theme_provider), Data section (export to CSV button - generates CSV of all expenses, clear cache button), About section (app version, terms, privacy policy placeholders), sign out button at bottom",
+    "Create lib/screens/reports/reports_screen.dart: AppBar with date range selector dropdown (This Month, Last Month, Last 3 Months, This Year, All Time, Custom), TabBarView with 3 tabs - Overview (total spent, average per day, expense count), By Category (PieChart from fl_chart, list of categories with amounts and percentages), Trends (LineChart showing daily/weekly/monthly trend based on date range)",
+    "Create lib/screens/profile/profile_screen.dart: centered Card with CircleAvatar (user photoUrl or initials), displayName, email, 'Member since' date, stats row (total expenses, total spent, categories used), ListTile for Edit Profile (opens edit dialog), ListTile for Change Password (if email auth), Sign Out button with confirmation dialog",
+    "Create lib/widgets/common/spending_pie_chart.dart: wraps fl_chart PieChart, takes expenses list, groups by category, shows percentages and amounts, legend with category colors",
+    "Create lib/widgets/common/spending_line_chart.dart: wraps fl_chart LineChart, takes expenses list and date range, plots spending over time, formatted dates on X-axis, amounts on Y-axis",
+    "Create lib/providers/theme_provider.dart: ChangeNotifier with ThemeMode (light/dark/system), toggleTheme, saveToSharedPreferences, loadFromSharedPreferences",
+    "Update lib/main.dart: wrap with theme_provider, use themeMode from provider, MaterialApp.themeMode property"
+  ],
+  "acceptance_criteria": [
+    "Categories screen lists all default and custom categories",
+    "Add custom category with icon and color works",
+    "Edit/delete custom categories works (default categories protected)",
+    "Settings screen currency selector updates user preference in Firestore",
+    "Theme toggle switches between light/dark mode immediately",
+    "Reports screen shows correct charts for selected date range",
+    "Pie chart shows spending breakdown by category with correct percentages",
+    "Line chart shows spending trend over time",
+    "Profile screen displays user info and stats correctly",
+    "Sign out logs user out and returns to login screen",
+    "All 10+ screens are functional and navigate correctly"
+  ],
+  "verification": [
+    "Run 'flutter analyze' and confirm zero issues",
+    "Run 'flutter run' on emulator",
+    "Navigate to Categories - add, edit, delete custom category",
+    "Navigate to Settings - change currency, toggle theme, verify persistence after app restart",
+    "Navigate to Reports - select different date ranges, verify charts update",
+    "Navigate to Profile - verify user data displays, test sign out",
+    "Count total screens: Splash, Onboarding, Login, Register, Forgot Password, Home, Add Expense, Edit Expense, Expense List, Expense Detail, Categories, Add Category, Edit Category, Settings, Reports, Profile (16 screens total)",
+    "Test bottom navigation flow between main screens",
+    "Test dark mode - verify all screens look correct"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

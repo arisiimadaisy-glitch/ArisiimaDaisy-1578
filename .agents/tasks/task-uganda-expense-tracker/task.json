@@ -1,0 +1,13 @@
+{
+  "task_id": "task-uganda-expense-tracker",
+  "task_description": "Build a complete expense tracker app for Uganda with multi-currency support, Firebase authentication (Google + Email), custom categories, date filtering, and 10+ screens",
+  "status": "pending",
+  "feature_order": [
+    "FEAT-001",
+    "FEAT-002",
+    "FEAT-003",
+    "FEAT-004",
+    "FEAT-005"
+  ],
+  "blocked_reason": null
+}

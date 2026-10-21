@@ -1,0 +1,36 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Data layer: models, services, and providers for authentication, expenses, and categories. Creates user_model.dart, expense_model.dart (with fields: id, userId, amount, currencyCode, category, note, date, receiptImageUrl, createdAt, updatedAt, toJson/fromJson), category_model.dart (id, name, icon, color, isDefault, userId, toJson/fromJson). Implements auth_service.dart with Firebase Auth (signInWithGoogle, signInWithEmail, signUpWithEmail, signOut, getCurrentUser, resetPassword), database_service.dart with Firestore CRUD (addExpense, updateExpense, deleteExpense, getExpenses with filters, addCategory, updateCategory, deleteCategory, getCategories), storage_service.dart for receipt uploads, currency_service.dart for currency list and selection, local_storage_service.dart with Hive for offline caching. Creates providers: auth_provider.dart (user state, auth methods), expense_provider.dart (expense list, CRUD, filtering, sorting), category_provider.dart (category list, CRUD).",
+  "status": "pending",
+  "steps": [
+    "Create lib/models/user_model.dart: User class with id, email, displayName, photoUrl, selectedCurrency, createdAt, toJson/fromJson methods",
+    "Create lib/models/category_model.dart: Category class with id, name, iconCodePoint, colorValue, isDefault, userId, toJson/fromJson, default categories list (Food, Transport, Shopping, Bills, Health, Entertainment, Travel, Education, Other)",
+    "Create lib/models/expense_model.dart: Expense class with id, userId, amount, currencyCode, categoryId, note, date, receiptImageUrl, createdAt, updatedAt, toJson/fromJson",
+    "Create lib/services/auth_service.dart: implement signInWithGoogle using google_sign_in + firebase_auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, authStateChanges stream, getCurrentUser, sendPasswordResetEmail, updateUserProfile",
+    "Create lib/services/database_service.dart: Firestore methods - addExpense, updateExpense, deleteExpense, getExpenseById, getExpensesStream(userId, dateRange, categoryFilter), addCategory, updateCategory, deleteCategory, getCategoriesStream(userId), getUserProfile, updateUserProfile",
+    "Create lib/services/storage_service.dart: uploadReceiptImage(File image, String expenseId) returns download URL, deleteReceiptImage(String url)",
+    "Create lib/services/currency_service.dart: getAllCurrencies() returns list from app_constants, getDefaultCurrency() returns UGX, saveCurrencyPreference(code) to Firestore user doc",
+    "Create lib/services/local_storage_service.dart: init Hive, registerAdapters for models, cacheExpenses, getCachedExpenses, cacheCategories, getCachedCategories, clear cache methods",
+    "Create lib/providers/auth_provider.dart: ChangeNotifier with User? currentUser, AuthStatus enum (uninitialized, authenticated, unauthenticated), signInWithGoogle/Email methods calling auth_service, signOut, listen to authStateChanges",
+    "Create lib/providers/category_provider.dart: ChangeNotifier with List<Category> categories, loading state, loadCategories, addCategory, updateCategory, deleteCategory, getDefaultCategories",
+    "Create lib/providers/expense_provider.dart: ChangeNotifier with List<Expense> expenses, loading state, DateRange? selectedDateRange, Category? selectedCategoryFilter, loadExpenses, addExpense, updateExpense, deleteExpense, applyFilters, getTotalByCategory, getTotalByCurrency, sortByDate/Amount"
+  ],
+  "acceptance_criteria": [
+    "All model classes have complete toJson/fromJson with no fields missing",
+    "auth_service connects to Firebase Auth and can sign in test user",
+    "database_service can write/read from Firestore",
+    "Providers properly notify listeners on state changes",
+    "Unit tests for models toJson/fromJson pass",
+    "Unit tests for utility methods in providers pass"
+  ],
+  "verification": [
+    "Run 'flutter analyze' and confirm zero issues",
+    "Run 'flutter test' for model serialization tests",
+    "Create Firebase project manually at console.firebase.google.com",
+    "Run 'flutterfire configure' to add Firebase config files",
+    "Run 'flutter run' and verify Firebase initialization succeeds in logs"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
