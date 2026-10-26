@@ -1,0 +1,27 @@
+{
+  "project_type": "Flutter mobile application with provider state management",
+  "language": "Dart",
+  "build_system": "Flutter SDK with pub dependency manager",
+  "test_framework": "flutter_test (default Flutter testing framework)",
+  "build_command": "flutter build apk or flutter build ios (platform-specific)",
+  "test_command": "flutter test",
+  "verification_instructions": "Run 'flutter analyze' to check for errors, 'flutter test' for unit tests if written, and 'flutter run' on emulator/device to verify UI behavior. Check no compilation errors and app launches successfully.",
+  "snapshot_or_generated_files": "None that need to be checked in. Build artifacts go to build/ which is gitignored.",
+  "environment_constraints": "Flutter app requires Flutter SDK installed. No live databases - all data must be in-memory only. Firebase imports are commented out in main.dart and should remain so.",
+  "contribution_requirements": "Use existing theme from lib/core/theme/app_theme.dart with AppConstants.ugandaGreen (0xFF08A71D primary, 0xFF09420E dark). Match existing design patterns from home_screen.dart (cards with borderRadius 20-28, Color(0xFFF5F5F3) background, Color(0xFF111111) text, Color(0xFF777777) muted). Use provider for state management as already set up in main.dart.",
+  "key_patterns": "Screens use Card widgets with elevation 0, borderRadius 20-28. AppBar uses white background with dark green foreground. Bottom navigation pattern in home_screen.dart has 5 items. Forms use TextFormField with validators. Currency format uses AppConstants.defaultCurrency (UGX). Date formatting uses intl package DateFormat. Charts use fl_chart package (BarChart, PieChart examples in reports_screen.dart).",
+  "relevant_files": [
+    "lib/main.dart",
+    "lib/core/routes/app_router.dart",
+    "lib/core/theme/app_theme.dart",
+    "lib/core/constants/app_constants.dart",
+    "lib/screens/home/home_screen.dart",
+    "lib/screens/auth/login_screen.dart",
+    "lib/screens/auth/register_screen.dart",
+    "lib/screens/splash/splash_screen.dart",
+    "lib/screens/expenses/add_expense_screen.dart",
+    "lib/screens/reports/reports_screen.dart",
+    "pubspec.yaml"
+  ],
+  "directory_structure": "lib/data/ (models, repositories), lib/services/ (business logic), lib/providers/ (state management), lib/screens/ (UI organized by feature), lib/widgets/ (reusable components), lib/utils/ (formatters, validators, helpers), lib/core/ (theme, routes, constants)"
+}

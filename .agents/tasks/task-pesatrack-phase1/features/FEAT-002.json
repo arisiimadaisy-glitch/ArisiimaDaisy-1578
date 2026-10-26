@@ -1,0 +1,32 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Create services layer with all business logic and calculation methods. 7 services (FinanceService, BudgetService, SavingsService, AnalyticsService, NotificationService, AIService, VoiceService) that process data from repositories and provide computed values. AIService implements rule-based chat with pattern matching for spending analysis, budget queries, savings tips, and affordability checks. Depends on FEAT-001 models.",
+  "status": "pending",
+  "steps": [
+    "Create lib/services/finance_service.dart with methods: calculateTotalIncome(transactions, dateRange), calculateTotalExpenses(transactions, dateRange), calculateBalance(transactions), getTransactionsByCategory(transactions, categoryId), getTransactionsByDateRange(transactions, startDate, endDate). Takes transactions list as parameter.",
+    "Create lib/services/budget_service.dart with methods: calculateSpentForBudget(transactions, budget), calculateRemaining(budget, spent), getBudgetStatus(spent, limit) returning 'green' (<70%), 'yellow' (70-99%), 'red' (>=100%), checkBudgetWarnings(budgets, transactions) returning list of over-budget warnings",
+    "Create lib/services/savings_service.dart with methods: calculateProgress(goal) returning percentage, calculateDaysRemaining(goal), calculateMonthlyTarget(goal) suggesting monthly savings needed",
+    "Create lib/services/analytics_service.dart with methods: getSpendingByCategory(transactions, dateRange) returning Map<String,double>, getMonthlyTrend(transactions, months) returning List<double>, getWeeklyTrend(transactions, weeks) returning List<double>, compareWithPreviousPeriod(transactions, currentStart, currentEnd) returning percentage difference",
+    "Create lib/services/notification_service.dart with methods: createBudgetWarning(budget, spent), createGoalReminder(goal, daysUntilTarget), createWeeklySummary(transactions, weekStart, weekEnd), createTransactionReminder() - each returns NotificationItem model instance",
+    "Create lib/services/ai_service.dart with processMessage(String query, List<Transaction> transactions, List<Budget> budgets, List<SavingsGoal> goals) returning String response. Implement rule-based pattern matching: detect 'how much', 'spent', 'spending' for spending queries; 'where', 'money go', 'category' for category breakdown; 'afford', 'can I buy' for affordability checks; 'save', 'saving', 'tips' for savings advice; 'budget' for budget status. Include fallback responses and helpful suggestions.",
+    "Create lib/services/voice_service.dart with parseVoiceCommand(String command) stub method returning placeholder Map<String,dynamic> with 'action' and 'params' keys. Comment indicating future speech-to-text integration point."
+  ],
+  "acceptance_criteria": [
+    "All 7 service files exist in lib/services/ with documented public methods",
+    "FinanceService correctly calculates income, expenses, and balance from transaction lists",
+    "BudgetService implements three-tier status system (green/yellow/red) based on percentage thresholds",
+    "SavingsService calculates progress percentage and monthly targets accurately",
+    "AnalyticsService provides trend data and period comparisons",
+    "AIService responds to at least 5 query patterns with relevant answers using transaction/budget/goal data",
+    "VoiceService has stub implementation ready for future integration",
+    "No compilation errors when running flutter analyze"
+  ],
+  "verification": [
+    "Run 'flutter analyze' and confirm no errors in lib/services/",
+    "Verify all service methods are present and have appropriate return types",
+    "Check AIService has pattern matching logic for multiple query types"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

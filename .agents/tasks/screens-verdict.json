@@ -1,0 +1,8 @@
+{
+  "verdict": "APPROVED",
+  "findings": [
+    "Bottom navigation state doesn't persist — The home screen's _selectedBottomItem tracks which nav item is active, but navigating to another screen and returning resets it to 0. Use a state management solution or pass selected index via route arguments if cross-screen persistence is needed.",
+    "Mock data not persisted — Expenses, user profile, and spending totals use hardcoded values. The save/update buttons show success snackbars but don't persist changes. Wire these to Firebase Firestore (already in pubspec.yaml) or Hive local storage to make the app functional."
+  ],
+  "reviewDoc": "c:\\APP PROJECT\\login_app\\.agents\\tasks\\screens-review.md"
+}

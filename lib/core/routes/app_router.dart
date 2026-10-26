@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../../screens/auth/login_screen.dart';
+import '../../screens/home/home_screen.dart';
+import '../../screens/splash/splash_screen.dart';
+import '../../screens/auth/register_screen.dart';
+import '../../screens/expenses/add_expense_screen.dart';
+import '../../screens/expenses/edit_expense_screen.dart';
+import '../../screens/expenses/expense_list_screen.dart';
+import '../../screens/expenses/expense_detail_screen.dart';
+import '../../screens/categories/categories_screen.dart';
+import '../../screens/reports/reports_screen.dart';
+import '../../screens/settings/settings_screen.dart';
+import '../../screens/profile/profile_screen.dart';
+
 /// Named route constants for the app
 class AppRoutes {
   AppRoutes._();
@@ -33,7 +46,7 @@ class AppRouter {
 
       case AppRoutes.login:
         return MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
+          builder: (_) => const LoginPage(),
           settings: settings,
         );
 
@@ -45,7 +58,7 @@ class AppRouter {
 
       case AppRoutes.home:
         return MaterialPageRoute(
-          builder: (_) => const HomeScreen(),
+          builder: (_) => const DashboardPage(),
           settings: settings,
         );
 
@@ -106,173 +119,9 @@ class AppRouter {
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
-            body: Center(
-              child: Text('No route defined for ${settings.name}'),
-            ),
+            body: Center(child: Text('No route defined for ${settings.name}')),
           ),
         );
     }
-  }
-}
-
-// Placeholder screens (to be implemented in future features)
-
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-}
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Login Screen - To be implemented'),
-      ),
-    );
-  }
-}
-
-class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Register Screen - To be implemented'),
-      ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Home Screen - To be implemented'),
-      ),
-    );
-  }
-}
-
-class AddExpenseScreen extends StatelessWidget {
-  const AddExpenseScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Add Expense Screen - To be implemented'),
-      ),
-    );
-  }
-}
-
-class EditExpenseScreen extends StatelessWidget {
-  final String? expenseId;
-
-  const EditExpenseScreen({super.key, this.expenseId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Edit Expense Screen - To be implemented\nExpense ID: $expenseId'),
-      ),
-    );
-  }
-}
-
-class ExpenseListScreen extends StatelessWidget {
-  const ExpenseListScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Expense List Screen - To be implemented'),
-      ),
-    );
-  }
-}
-
-class ExpenseDetailScreen extends StatelessWidget {
-  final String? expenseId;
-
-  const ExpenseDetailScreen({super.key, this.expenseId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Expense Detail Screen - To be implemented\nExpense ID: $expenseId'),
-      ),
-    );
-  }
-}
-
-class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Categories Screen - To be implemented'),
-      ),
-    );
-  }
-}
-
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Settings Screen - To be implemented'),
-      ),
-    );
-  }
-}
-
-class ReportsScreen extends StatelessWidget {
-  const ReportsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Reports Screen - To be implemented'),
-      ),
-    );
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Profile Screen - To be implemented'),
-      ),
-    );
   }
 }

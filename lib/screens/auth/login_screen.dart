@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../home/home_screen.dart';
+import '../../core/routes/app_router.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,11 +23,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _signIn() {
+    // Check whether the email and password fields are valid.
     if (!_formKey.currentState!.validate()) return;
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const DashboardPage()),
-    );
+    // Open the dashboard and remove the login screen from the stack.
+    Navigator.pushReplacementNamed(context, AppRoutes.home);
   }
 
   @override
@@ -165,7 +165,10 @@ class _LoginPageState extends State<LoginPage> {
                                 style: TextStyle(color: Colors.grey.shade700),
                               ),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () => Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.register,
+                                ),
                                 child: const Text('Sign Up'),
                               ),
                             ],

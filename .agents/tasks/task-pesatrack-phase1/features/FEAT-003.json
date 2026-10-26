@@ -1,0 +1,41 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Create providers layer (state management) and utilities. 8 providers extending ChangeNotifier using repositories and services from FEAT-001/FEAT-002. Update main.dart to wrap app with MultiProvider. Create utility files for formatting, validation, colors, and text styles. This connects data/services to UI and provides shared formatting logic.",
+  "status": "pending",
+  "steps": [
+    "Create lib/providers/auth_provider.dart extending ChangeNotifier with currentUser, isLoggedIn, login(email, password), logout, register methods using UserRepository. Call notifyListeners after state changes.",
+    "Create lib/providers/transaction_provider.dart extending ChangeNotifier with transactions list, loading state, addTransaction, updateTransaction, deleteTransaction, getTransactionById, filterByType, filterByDateRange, filterByCategory, searchTransactions methods using TransactionRepository and FinanceService. Call notifyListeners.",
+    "Create lib/providers/budget_provider.dart extending ChangeNotifier with budgets list, addBudget, updateBudget, deleteBudget, getBudgetStatus(budgetId), getSpentAmount(budgetId) methods using BudgetRepository and BudgetService. Call notifyListeners.",
+    "Create lib/providers/savings_provider.dart extending ChangeNotifier with goals list, addGoal, updateGoal, deleteGoal, addToGoal(goalId, amount), withdrawFromGoal(goalId, amount), getProgress(goalId) methods using SavingsRepository and SavingsService. Call notifyListeners.",
+    "Create lib/providers/category_provider.dart extending ChangeNotifier with categories list (income and expense separated), addCategory, updateCategory, deleteCategory, getCategoriesByType(type) methods using CategoryRepository. Prevent deletion of default categories. Call notifyListeners.",
+    "Create lib/providers/notification_provider.dart extending ChangeNotifier with notifications list, unreadCount, addNotification, markAsRead(id), markAllAsRead, deleteNotification methods using NotificationRepository. Call notifyListeners.",
+    "Create lib/providers/ai_provider.dart extending ChangeNotifier with chatHistory list of AIMessage, isProcessing, sendMessage(message) calling AIService.processMessage with current transaction/budget/goal data, addMessage method. Call notifyListeners.",
+    "Create lib/providers/dashboard_provider.dart extending ChangeNotifier with computed properties: totalBalance, totalIncome, totalExpenses (current month), recentTransactions (last 5), budgetsSummary, goalsSummary. Depends on TransactionProvider, BudgetProvider, SavingsProvider. Call notifyListeners when underlying data changes.",
+    "Update lib/main.dart: import all providers, wrap MaterialApp with MultiProvider providing: ThemeProvider (already exists), AuthProvider, TransactionProvider, BudgetProvider, SavingsProvider, CategoryProvider, NotificationProvider, AIProvider, DashboardProvider",
+    "Create lib/utils/currency_formatter.dart with formatUGX(double amount) returning 'UGX #,###' format using intl NumberFormat",
+    "Create lib/utils/date_formatter.dart with formatDate(DateTime date) returning 'Today', 'Yesterday', or 'MMM dd, yyyy' format, and formatRelative(DateTime date) for relative times",
+    "Create lib/utils/validators.dart with validateEmail(String? value), validatePassword(String? value) requiring min 8 chars + 1 number, validateAmount(String? value) checking > 0, validateRequired(String? value)",
+    "Create lib/utils/colors.dart with AppColors class constants: primary (0xFF08A71D), darkGreen (0xFF09420E), background (0xFFF5F5F3), accent (0xFF7043E8), success (0xFF10B981), warning (0xFFF59E0B), danger (0xFFEF4444), textPrimary (0xFF111111), textMuted (0xFF777777)",
+    "Create lib/utils/text_styles.dart with AppTextStyles class: headline (size 24, w800), subtitle (size 18, w600), body (size 14, w400), amount (size 16, w700), caption (size 12, w400)",
+    "Create lib/utils/ai_prompts.dart with AI response templates as const strings and helper methods for spending analysis patterns",
+    "Create lib/utils/voice_parser.dart with parseCommand(String command) stub returning structured placeholder data"
+  ],
+  "acceptance_criteria": [
+    "All 8 provider files exist in lib/providers/ extending ChangeNotifier with proper methods",
+    "All providers call notifyListeners() after state changes",
+    "main.dart successfully wraps app with MultiProvider containing all 9 providers (including existing ThemeProvider)",
+    "All 6 utility files exist in lib/utils/ with documented functions",
+    "Currency formatter produces 'UGX #,###' format, date formatter handles relative dates",
+    "Validators return appropriate error messages or null",
+    "No compilation errors when running flutter analyze"
+  ],
+  "verification": [
+    "Run 'flutter analyze' and confirm no errors",
+    "Verify main.dart has MultiProvider with all 9 providers",
+    "Check each provider extends ChangeNotifier and calls notifyListeners",
+    "Verify utility files have correct function signatures"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import '../../core/routes/app_router.dart';
+import '../../core/constants/app_constants.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -29,43 +33,43 @@ class _DashboardPageState extends State<DashboardPage> {
     _ExpenseCategory(
       name: 'Travel',
       transactions: '2 transactions',
-      amount: '£115.54',
+      amount: 115.54,
       icon: Icons.train_outlined,
     ),
     _ExpenseCategory(
       name: 'Groceries',
       transactions: '5 transactions',
-      amount: '£57.43',
+      amount: 57.43,
       icon: Icons.shopping_cart_outlined,
     ),
     _ExpenseCategory(
       name: 'Shopping',
       transactions: '9 transactions',
-      amount: '£51.11',
+      amount: 51.11,
       icon: Icons.shopping_bag_outlined,
     ),
     _ExpenseCategory(
       name: 'Bills',
       transactions: '1 transaction',
-      amount: '£41.00',
+      amount: 41.00,
       icon: Icons.receipt_long_outlined,
     ),
     _ExpenseCategory(
       name: 'Transfers',
       transactions: '2 transactions',
-      amount: '£25.39',
+      amount: 25.39,
       icon: Icons.swap_horiz_rounded,
     ),
     _ExpenseCategory(
       name: 'Eating out',
       transactions: '1 transaction',
-      amount: '£13.37',
+      amount: 13.37,
       icon: Icons.restaurant_outlined,
     ),
     _ExpenseCategory(
       name: 'Entertainment',
       transactions: '2 transactions',
-      amount: '£1.59',
+      amount: 1.59,
       icon: Icons.movie_outlined,
     ),
   ];
@@ -93,6 +97,10 @@ class _DashboardPageState extends State<DashboardPage> {
     'Nov',
     'Dec',
   ][month - 1];
+  String _formatAmount(double amount) {
+    return '${AppConstants.defaultCurrency.symbol} '
+        '${amount.toStringAsFixed(2)}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +113,9 @@ class _DashboardPageState extends State<DashboardPage> {
             Expanded(
               child: CustomScrollView(
                 slivers: [
+                  SliverToBoxAdapter(child: _buildGreetingCard()),
                   SliverToBoxAdapter(child: _buildHeader()),
+                  SliverToBoxAdapter(child: _buildQuickActions()),
                   SliverToBoxAdapter(child: _buildPeriodSelector()),
                   SliverToBoxAdapter(child: _buildTabs()),
                   SliverToBoxAdapter(child: _buildTotal()),
@@ -131,9 +141,148 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
+  Widget _buildGreetingCard() {
+    final now = DateTime.now();
+    final timeOfDay = now.hour < 12
+        ? 'morning'
+        : now.hour < 17
+        ? 'afternoon'
+        : 'evening';
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF08A71D), Color.fromARGB(255, 9, 66, 14)],
+        ),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Good $timeOfDay, User 👋',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            DateFormat('EEEE, dd MMM yyyy').format(now),
+            style: const TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Text(
+              'USh 245,000 spent this month',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActions() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildQuickActionCard(
+              icon: Icons.add_circle_outline,
+              label: 'Add Expense',
+              color: const Color(0xFF08A71D),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.addExpense),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildQuickActionCard(
+              icon: Icons.bar_chart,
+              label: 'Reports',
+              color: const Color(0xFF7043E8),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.reports),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildQuickActionCard(
+              icon: Icons.grid_view,
+              label: 'Categories',
+              color: const Color(0xFFFF9800),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.categories),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildQuickActionCard(
+              icon: Icons.settings_outlined,
+              label: 'Settings',
+              color: const Color(0xFF2196F3),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.settings),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActionCard({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color, size: 28),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
       child: Row(
         children: [
           const SizedBox(
@@ -348,7 +497,7 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ),
           Text(
-            category.amount,
+            _formatAmount(category.amount),
             style: const TextStyle(
               color: _ink,
               fontSize: 15,
@@ -378,7 +527,29 @@ class _DashboardPageState extends State<DashboardPage> {
               final selected = _selectedBottomItem == index;
               return Expanded(
                 child: InkWell(
-                  onTap: () => setState(() => _selectedBottomItem = index),
+                  onTap: () {
+                    setState(() => _selectedBottomItem = index);
+
+                    if (index == 0) {
+                      // Already on the dashboard.
+                      return;
+                    }
+
+                    switch (index) {
+                      case 1:
+                        Navigator.pushNamed(context, AppRoutes.expenseList);
+                        break;
+                      case 2:
+                        Navigator.pushNamed(context, AppRoutes.addExpense);
+                        break;
+                      case 3:
+                        Navigator.pushNamed(context, AppRoutes.reports);
+                        break;
+                      case 4:
+                        Navigator.pushNamed(context, AppRoutes.profile);
+                        break;
+                    }
+                  },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -436,6 +607,6 @@ class _ExpenseCategory {
 
   final String name;
   final String transactions;
-  final String amount;
+  final double amount;
   final IconData icon;
 }

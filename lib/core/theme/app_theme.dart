@@ -24,7 +24,6 @@ class AppTheme {
         secondary: AppConstants.ugandaYellow,
         error: AppConstants.ugandaRed,
         surface: Colors.white,
-        background: _backgroundLight,
       ),
 
       // Text theme
@@ -166,7 +165,6 @@ class AppTheme {
         secondary: AppConstants.ugandaYellow,
         error: AppConstants.ugandaRed,
         surface: const Color(0xFF2A2A2A),
-        background: _backgroundDark,
       ),
 
       // Text theme

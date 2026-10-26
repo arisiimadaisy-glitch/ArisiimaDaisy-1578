@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+
 import '../constants/app_constants.dart';
 
 /// Helper functions for currency formatting and conversion
@@ -78,7 +79,7 @@ class CurrencyFormatter {
   /// Convert currency from one code to another
   /// Note: This is a stub implementation that returns the same amount.
   /// Real conversion requires an external API (e.g., exchangerate-api.com)
-  /// TODO: Implement real currency conversion with API
+  ///  Implement real currency conversion with API
   static double convertCurrency({
     required double amount,
     required String fromCurrency,

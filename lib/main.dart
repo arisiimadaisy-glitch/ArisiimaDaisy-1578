@@ -12,7 +12,7 @@ void main() async {
   // Initialize Flutter bindings
   WidgetsFlutterBinding.ensureInitialized();
 
-  // TODO: Initialize Firebase after running: flutterfire configure
+  // Initialize Firebase after running: flutterfire configure
   // Uncomment these lines after configuration:
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,

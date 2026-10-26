@@ -52,7 +52,10 @@ class AppConstants {
     ExpenseCategory(name: 'Transport', icon: Icons.directions_car_outlined),
     ExpenseCategory(name: 'Shopping', icon: Icons.shopping_bag_outlined),
     ExpenseCategory(name: 'Entertainment', icon: Icons.movie_outlined),
-    ExpenseCategory(name: 'Bills & Utilities', icon: Icons.receipt_long_outlined),
+    ExpenseCategory(
+      name: 'Bills & Utilities',
+      icon: Icons.receipt_long_outlined,
+    ),
     ExpenseCategory(name: 'Healthcare', icon: Icons.local_hospital_outlined),
     ExpenseCategory(name: 'Education', icon: Icons.school_outlined),
     ExpenseCategory(name: 'Groceries', icon: Icons.shopping_cart_outlined),
@@ -61,12 +64,15 @@ class AppConstants {
     ExpenseCategory(name: 'Housing', icon: Icons.home_outlined),
     ExpenseCategory(name: 'Insurance', icon: Icons.security_outlined),
     ExpenseCategory(name: 'Investments', icon: Icons.trending_up_outlined),
-    ExpenseCategory(name: 'Gifts & Donations', icon: Icons.card_giftcard_outlined),
+    ExpenseCategory(
+      name: 'Gifts & Donations',
+      icon: Icons.card_giftcard_outlined,
+    ),
     ExpenseCategory(name: 'Other', icon: Icons.more_horiz_outlined),
   ];
 
   // App metadata
-  static const String appName = 'Uganda Expense Tracker';
+  static const String appName = 'PesaTracker';
   static const String appVersion = '1.0.0';
 }
 
@@ -88,7 +94,9 @@ class Currency {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Currency && runtimeType == other.runtimeType && code == other.code;
+      other is Currency &&
+          runtimeType == other.runtimeType &&
+          code == other.code;
 
   @override
   int get hashCode => code.hashCode;
@@ -99,10 +107,7 @@ class ExpenseCategory {
   final String name;
   final IconData icon;
 
-  const ExpenseCategory({
-    required this.name,
-    required this.icon,
-  });
+  const ExpenseCategory({required this.name, required this.icon});
 
   @override
   String toString() => name;
@@ -110,7 +115,9 @@ class ExpenseCategory {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ExpenseCategory && runtimeType == other.runtimeType && name == other.name;
+      other is ExpenseCategory &&
+          runtimeType == other.runtimeType &&
+          name == other.name;
 
   @override
   int get hashCode => name.hashCode;

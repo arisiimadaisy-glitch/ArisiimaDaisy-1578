@@ -1,0 +1,38 @@
+{
+  "id": "FEAT-004",
+  "type": "feat",
+  "description": "Create reusable widget components library. 14 custom widgets following existing design patterns from home_screen.dart and add_expense_screen.dart. These widgets will be used across all screens for consistent UI/UX. Includes transaction cards, budget cards, goal cards, stats, charts, forms, dialogs, and empty states.",
+  "status": "pending",
+  "steps": [
+    "Create lib/widgets/transaction_card.dart: displays transaction with category icon (leading), name/date (title/subtitle), amount colored red for expense/green for income (trailing), tap callback. Use existing home_screen.dart _buildCategory pattern as reference.",
+    "Create lib/widgets/budget_progress_card.dart: Card with budget name, progress bar (LinearProgressIndicator colored green <70%, yellow 70-99%, red >=100%), spent/limit amounts. BorderRadius 20, padding 16.",
+    "Create lib/widgets/savings_goal_card.dart: Card with goal name, circular progress (CircularProgressIndicator or custom painter), current/target amounts, days remaining badge. BorderRadius 20.",
+    "Create lib/widgets/stat_card.dart: Compact card with icon, label, value for dashboard statistics. White background, borderRadius 16, padding 16. Used in dashboard summary.",
+    "Create lib/widgets/category_icon.dart: CircleAvatar with MaterialIcon from icon codePoint int, colored background based on category color int. Size parameter (default 52).",
+    "Create lib/widgets/amount_display.dart: Text widget displaying formatted UGX amount with optional +/- prefix, colored green for income/red for expense. FontWeight.w700.",
+    "Create lib/widgets/date_range_picker.dart: Row with two date buttons (start/end) showing formatted dates with calendar icons. Taps show DatePicker. Returns DateTimeRange.",
+    "Create lib/widgets/chart_widget.dart: Wrapper widget for fl_chart with preset styling. Supports BarChart and PieChart types. Use patterns from reports_screen.dart as reference for chart configuration.",
+    "Create lib/widgets/empty_state.dart: Column with large icon (default Icons.inbox_outlined), message text, optional action button. Centered with padding. Used when lists are empty.",
+    "Create lib/widgets/loading_overlay.dart: Full-screen modal barrier with CircularProgressIndicator centered. Semi-transparent black background (Colors.black54).",
+    "Create lib/widgets/confirmation_dialog.dart: AlertDialog with title, message, cancel and confirm buttons. Styled to match theme. Returns bool on pop.",
+    "Create lib/widgets/custom_text_field.dart: TextFormField wrapper with consistent styling from theme, label, hint, optional prefix icon, validator function parameter. BorderRadius 12.",
+    "Create lib/widgets/custom_button.dart: Two variants - CustomButton.primary (filled, green) and CustomButton.secondary (outlined, white bg). MinHeight 54, borderRadius 14. Match existing FilledButton style from login_screen.dart.",
+    "Create lib/widgets/income_expense_toggle.dart: ToggleButtons or custom segmented control for Income/Expense selection. Used in add transaction screen."
+  ],
+  "acceptance_criteria": [
+    "All 14 widget files exist in lib/widgets/ as StatelessWidget or StatefulWidget",
+    "Widgets follow existing design patterns: borderRadius 20-28 for cards, Color(0xFFF5F5F3) background, proper padding",
+    "Colors match specification: green (0xFF08A71D), red (0xFFEF4444), yellow (0xFFF59E0B)",
+    "Widgets accept required parameters and optional customization",
+    "All widgets compile without errors",
+    "Widgets use AppColors and AppTextStyles from utils when appropriate"
+  ],
+  "verification": [
+    "Run 'flutter analyze' and confirm no errors in lib/widgets/",
+    "Verify all 14 widget files exist and compile",
+    "Check widgets use const constructors where possible",
+    "Verify widgets follow Material Design and existing app patterns"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
