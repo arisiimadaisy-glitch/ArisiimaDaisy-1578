@@ -61,11 +61,11 @@ class VoiceService {
             onDone();
           }
         },
-        listenFor: const Duration(seconds: 30),
-        pauseFor: const Duration(seconds: 3),
         listenOptions: SpeechListenOptions(
           partialResults: true,
           listenMode: ListenMode.confirmation,
+          listenFor: const Duration(seconds: 30),
+          pauseFor: const Duration(seconds: 3),
         ),
       );
     } catch (e) {
@@ -112,12 +112,12 @@ class VoiceService {
                 _isListening = false;
               }
             },
-            listenFor: const Duration(seconds: 30),
-            pauseFor: const Duration(seconds: 3),
-            localeId: 'en_US',
             listenOptions: SpeechListenOptions(
               partialResults: true,
               listenMode: ListenMode.confirmation,
+              listenFor: const Duration(seconds: 30),
+              pauseFor: const Duration(seconds: 3),
+              localeId: 'en_US',
             ),
           );
         }
