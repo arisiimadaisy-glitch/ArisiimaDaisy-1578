@@ -1,22 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 // Firebase imports - commented out until Firebase is configured
-// import 'package:firebase_core/firebase_core.dart';
-// import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+import 'firebase_options.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/routes/app_router.dart';
 import 'core/constants/app_constants.dart';
+import 'core/constants/pesatrack_ai_constants.dart';
+import 'core/providers/pesatrack_ai_provider.dart';
+import 'core/providers/auth_provider.dart';
 
 void main() async {
   // Initialize Flutter bindings
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize Hive for local storage
+  await Hive.initFlutter();
+
+  // Open the Hive box for chat history
+  await Hive.openBox<String>(PesaTrackAIConstants.hiveChatBoxName);
+
   // Initialize Firebase after running: flutterfire configure
-  // Uncomment these lines after configuration:
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    // Firebase initialization failed - may need flutterfire configure
+    debugPrint('Firebase initialization error: $e');
+  }
 
   runApp(const MyApp());
 }
@@ -26,8 +41,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, PesaTrackAIProvider>(
+          create: (_) => PesaTrackAIProvider(),
+          update: (_, authProvider, pesaTrackAIProvider) {
+            final userId = authProvider.currentUser?.id ?? '';
+            pesaTrackAIProvider?.setUserId(userId);
+            return pesaTrackAIProvider!;
+          },
+        ),
+      ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {
           return MaterialApp(

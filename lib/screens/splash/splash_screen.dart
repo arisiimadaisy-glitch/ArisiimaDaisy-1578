@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/routes/app_router.dart';
+import '../../core/providers/auth_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,9 +15,21 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
+    _navigateToNextScreen();
+  }
+
+  void _navigateToNextScreen() {
+    Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
+
+      final authProvider = context.read<AuthProvider>();
+
+      // Check if user is authenticated
+      if (authProvider.isAuthenticated) {
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
+      } else {
+        Navigator.pushReplacementNamed(context, AppRoutes.login);
+      }
     });
   }
 
@@ -27,10 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF08A71D),
-              Color.fromARGB(255, 9, 66, 14),
-            ],
+            colors: [Color(0xFF08A71D), Color.fromARGB(255, 9, 66, 14)],
           ),
         ),
         child: const Center(
@@ -54,10 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
               SizedBox(height: 8),
               Text(
                 'Your smart expense companion',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 14),
               ),
             ],
           ),

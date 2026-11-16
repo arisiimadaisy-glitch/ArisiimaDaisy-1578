@@ -1,0 +1,42 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Implement professional authentication service with Firebase Auth supporting Email, Google, and GitHub sign-in/signup, including user persistence and error handling with specific error messages.",
+  "status": "pending",
+  "steps": [
+    "Create lib/services/auth_service.dart with methods: signInWithEmail(email, password) → Future<User?>, registerWithEmail(email, password, name) → Future<User?>, signInWithGoogle() → Future<User?>, signInWithGithub() → Future<User?>, signOut() → Future<void>, getCurrentUser() → User?, isAuthenticated getter. Use firebase_auth.User as internal representation. Catch Firebase Auth exceptions and convert to specific error messages: 'Invalid credentials', 'Email already in use', 'Weak password', 'Network error', etc. For GitHub OAuth: attempt using firebase_auth's GitHub provider if available; if not, stub with clear UnimplementedError message directing to SETUP.md. For Google, use google_sign_in package to get ID token, then sign in via Firebase. Return custom User model (from lib/data/models/user_model.dart) from all auth methods. On successful signup, store user document in Firestore at path 'users/{uid}' with fields: id, email, name, authProvider (google/github/email), createdAt, lastLogin. Handle auth state stream via authStateChanges() to persist login state across app restarts",
+    "Enhance lib/data/models/user_model.dart to add fields: profilePictureUrl (String?), authProvider (String: google/github/email), lastLogin (DateTime?). Add factory User.fromFirebaseUser(firebase_auth.User firebaseUser, String authProvider) that extracts id (uid), email, name, and constructs the User. Update toJson/fromJson to include new fields. Add a copyWith method for immutable updates",
+    "Create lib/core/providers/auth_provider.dart as ChangeNotifier wrapping AuthService. Expose: currentUser (User?), isAuthenticated (bool), isLoading (bool), errorMessage (String?). Constructor listens to Firebase Auth state stream and updates currentUser automatically. Methods: login(email, password), register(email, password, name), signInWithGoogle(), signInWithGithub(), logout(), clearError(). Each method sets isLoading=true, attempts auth operation, sets isLoading=false, and notifies listeners. On error, set errorMessage with specific error text and notify. Handle Firebase Auth exceptions: user-not-found, wrong-password, email-already-in-use, weak-password, network-request-failed, etc., mapping each to friendly user message",
+    "Update lib/main.dart: uncomment Firebase.initializeApp() call after Hive initialization. Add AuthProvider to MultiProvider before PesaTrackAIProvider (so auth is available when AI provider initializes). Import firebase_core and firebase_options. Update MultiProvider to: ChangeNotifierProvider(create: (_) => ThemeProvider()), ChangeNotifierProvider(create: (_) => AuthProvider()), ChangeNotifierProvider(create: (_) => PesaTrackAIProvider()). Note: PesaTrackAIProvider still needs hardcoded userId for now; that will be updated in FEAT-003",
+    "Update lib/screens/splash/splash_screen.dart to check authentication state. In initState, listen to AuthProvider.isAuthenticated (via context.read<AuthProvider>().currentUser != null). If user is authenticated, navigate to home route (/home). If not, navigate to login route (/login). Add a timeout (e.g., 3 seconds) so splash screen doesn't hang if auth state stream is slow. Use async/await and Firebase Auth's authStateChanges().first with timeout to wait for initial state check",
+    "Update pubspec.yaml to add dependencies: font_awesome_flutter: ^10.0.0 for social media icons, and conditionally flutter_appauth: ^8.0.0 only if GitHub OAuth is implemented via device flow (if using Firebase's GitHub provider directly, this may not be needed — confirm after researching Firebase GitHub sign-in). Run `flutter pub get` after changes"
+  ],
+  "acceptance_criteria": [
+    "AuthService class exists and implements all required methods with proper error handling",
+    "Firebase exceptions are caught and converted to specific, user-friendly error messages",
+    "User model includes new fields (profilePictureUrl, authProvider, lastLogin) and supports fromFirebaseUser factory",
+    "AuthProvider is a ChangeNotifier that reflects Firebase Auth state and exposes currentUser, isAuthenticated, isLoading, errorMessage",
+    "Firebase is initialized in main.dart and AuthProvider is registered in MultiProvider",
+    "SplashScreen checks auth state and routes to home or login based on isAuthenticated",
+    "Google sign-in works using google_sign_in + Firebase Auth integration",
+    "GitHub sign-in either works via Firebase's GitHub provider or is stubbed with clear instructions",
+    "Email signup/login works with form validation and specific error messages",
+    "Logout clears user state and navigates to login",
+    "pubspec.yaml is updated with new dependencies and flutter pub get succeeds"
+  ],
+  "verification": [
+    "Run `flutter pub get` to fetch new dependencies (font_awesome_flutter, conditionally flutter_appauth)",
+    "Run `flutter analyze` — no errors related to imports or lints",
+    "Build: `flutter build apk --debug` (or iOS equivalent)",
+    "Manual test on emulator: launch app, verify SplashScreen loads and navigates to LoginScreen within 3 seconds",
+    "Manual test email signup: fill form, click Create Account, verify user is created and persisted in Firestore at users/{uid}",
+    "Manual test email login: log out, enter credentials, verify login works and navigates to home",
+    "Manual test Google sign-in: tap Google button, verify OAuth flow completes and user is created/logged in",
+    "Manual test GitHub sign-in: tap GitHub button, verify OAuth flow or clear error message appears if not configured",
+    "Manual test logout: navigate to settings/profile, tap logout, verify navigation to login and user state cleared",
+    "Verify Firebase Console: enable Email/Password, Google, and GitHub sign-in providers (manual step for developer)",
+    "Commit changes locally with message 'feat: add professional multi-auth with Email/Google/GitHub'"
+  ],
+  "blocked_reason": null,
+  "findings": "Note: firebase_options.dart must be generated by running `flutterfire configure` with a real Firebase project. This file is NOT present in the repo and should NOT be manually created. The developer must set up a Firebase project in Firebase Console, then run flutterfire configure locally to generate firebase_options.dart. OAuth2 credentials for Google and GitHub must be configured in Firebase Console before testing sign-in flows. This is a manual prerequisite and should be documented."
+}

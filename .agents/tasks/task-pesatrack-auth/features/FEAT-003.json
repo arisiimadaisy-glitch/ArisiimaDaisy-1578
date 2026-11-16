@@ -1,0 +1,44 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Build professional login and registration screens with email/password forms, Google and GitHub social sign-in buttons, password strength indicator, and proper loading/error states. Replace existing basic screens with polished UI matching app design system.",
+  "status": "pending",
+  "steps": [
+    "Replace lib/screens/auth/login_screen.dart with professional design: Hero section with PesaTrack branding (logo, app name, 'Your Smart Money Companion' tagline), email + password form fields using existing validation patterns, Social login buttons for Google (blue icon, google_sign_in) and GitHub (dark icon, font_awesome_flutter), 'Forgot password' button (can be stub for MVP), 'Don't have an account? Sign up' link, Loading state on each button independently, Error message banner displayed below form if errorMessage is set. Use existing colors: primary green #11BD2E (AppConstants.ugandaGreen), BorderRadius.circular(14) for buttons, circular(28) for card. Wire to AuthProvider: onPressed handlers for email/password login, Google sign-in, GitHub sign-in, with loading feedback",
+    "Replace lib/screens/auth/register_screen.dart with professional design: Matching hero section, Form fields: Name, Email, Password, Confirm Password with existing validation, Social signup buttons (same Google/GitHub design as login), Password strength indicator with visual bar (Red=weak, Yellow=medium, Green=strong) and rules listed (8+ chars, uppercase, lowercase, number, special char). Use TextEditingController to check password strength in real-time and update indicator. 'Already have an account? Sign in' link, Loading states, Error messages. Wire to AuthProvider for email signup and social signup",
+    "Update lib/main.dart to pass authenticated user's UID to PesaTrackAIProvider at initialization. In MultiProvider build, after AuthProvider is created, create PesaTrackAIProvider with access to AuthProvider.currentUser?.id. Alternatively, use a factory method or setter on PesaTrackAIProvider to accept userId. Ensure PesaTrackAIProvider reads userId from AuthProvider instead of using hardcoded 'user_001'",
+    "Update lib/core/providers/pesatrack_ai_provider.dart to accept userId dynamically. Change constructor from hardcoded _userId = PesaTrackAIConstants.defaultUserId to accepting userId from AuthProvider or as a constructor parameter. Add a public method setUserId(String userId) if dynamic switching is needed (e.g., on logout, clear messages for the old user). When user logs out, PesaTrackAIProvider should clear _messages and _userId, or logout handler in app should navigate away before this is called",
+    "Update lib/core/constants/pesatrack_ai_constants.dart: remove or comment out hardcoded defaultUserId since it will come from AuthProvider. Keep all other constants (messages, labels, etc.) intact"
+  ],
+  "acceptance_criteria": [
+    "LoginScreen displays hero section with branding, email/password form, Google/GitHub buttons, forgot password button, sign-up link",
+    "LoginScreen's email/password login triggers AuthProvider.login(), shows loading state on button, displays specific error messages, navigates to home on success",
+    "LoginScreen's Google button triggers AuthProvider.signInWithGoogle(), shows loading state, navigates to home on success",
+    "LoginScreen's GitHub button triggers AuthProvider.signInWithGithub(), shows loading state, either signs in or displays clear setup instructions",
+    "RegisterScreen displays hero section, Name/Email/Password/Confirm Password form, Google/GitHub buttons, password strength indicator with visual bar and rules",
+    "RegisterScreen validates all fields per existing patterns (8+ char password, email format, passwords match, name not empty)",
+    "RegisterScreen's password strength indicator updates in real-time as user types, showing Red/Yellow/Green bar and list of met/unmet rules",
+    "RegisterScreen's sign-up button triggers AuthProvider.register(), shows loading state, navigates to home on success, displays specific error messages",
+    "RegisterScreen's Google/GitHub buttons work for social signup (reuse AuthProvider.signInWithGoogle/GitHub)",
+    "Both screens' error messages are specific (not generic), dismissible, and cleared on next action",
+    "PesaTrackAIProvider initializes with authenticated user's UID from AuthProvider, not hardcoded value",
+    "On user logout, app clears PesaTrackAI history/state and navigates to login",
+    "All buttons use AppConstants.ugandaGreen, BorderRadius.circular(14), and follow existing design patterns",
+    "Font awesome icons display correctly for Google/GitHub on both login and register screens"
+  ],
+  "verification": [
+    "Run `flutter pub get` (dependencies already updated in FEAT-002)",
+    "Run `flutter analyze` — no errors or lints",
+    "Build: `flutter build apk --debug`",
+    "Launch app on emulator: verify SplashScreen navigates to LoginScreen",
+    "Manual test LoginScreen: verify email/password form works, Google button triggers sign-in, GitHub button triggers sign-in or displays error, forgot password link present, sign-up link navigates to RegisterScreen",
+    "Manual test RegisterScreen: verify all form fields present, password strength indicator updates as user types, all validation rules work, Google/GitHub buttons work, confirm registration and navigation to home",
+    "Manual test password strength: enter weak password (1 char), verify Red bar and rules show unmet criteria; enter strong password (8+, uppercase, lowercase, number, special), verify Green bar and all rules met",
+    "Manual test error messages: attempt login with non-existent email, verify specific error; attempt signup with duplicate email, verify specific error; attempt login with wrong password, verify specific error",
+    "Manual test authenticated user navigation: after successful login, verify app initializes PesaTrackAIProvider with correct user ID (not 'user_001')",
+    "Manual test logout: navigate to settings, log out, verify navigation to LoginScreen and PesaTrack AI state cleared",
+    "Commit changes locally with message 'feat: build professional login/register screens with social sign-in'"
+  ],
+  "blocked_reason": null,
+  "findings": "Password strength indicator is a UX enhancement. Implementation: create a separate StatefulWidget or use Consumer to listen to password field changes. Strength rules: 8+ chars, >=1 uppercase, >=1 lowercase, >=1 number, >=1 special char. Color the bar Red (0-1 rules met), Yellow (2-3 rules), Green (4+ rules). Display rules as a list with checkmarks for met, X for unmet. This is purely client-side validation and improves UX significantly. Keep it simple — no external password strength package needed."
+}

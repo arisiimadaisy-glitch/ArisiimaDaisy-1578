@@ -1,0 +1,29 @@
+{
+  "id": "FEAT-001",
+  "type": "fix",
+  "description": "Fix PesaTrack AI MVP review blockers: duplicate import in pesatrack_ai_page.dart, overly generic error messages in pesatrack_ai_provider.dart (and fix corrupted sendMessage method), and disable microphone button with 'Coming soon' tooltip to prevent null tap crashes.",
+  "status": "pending",
+  "steps": [
+    "Remove duplicate import of `package:flutter/material.dart` from lib/screens/pesatrack_ai/pesatrack_ai_page.dart (keep only line 1, delete line 2)",
+    "Fix structural corruption in lib/core/providers/pesatrack_ai_provider.dart: the sendMessage() method appears twice with a malformed body. Reconstruct it as a single method with correct error handling. Replace all generic 'Unable to load financial data' messages with specific ones: 'Failed to load your financial data. Please check your connection and try again.' (repository/network), 'Failed to save your message. Please try again.' (user message Hive), 'Response received but failed to save. Please try again.' (AI response Hive), 'Unable to process your request. Please try again.' (AI processing), 'An unexpected error occurred. Please try again.' (outer catch-all)",
+    "In lib/screens/pesatrack_ai/widgets/chat_input_area.dart, modify VoiceInputButton to be disabled with tooltip. Set enabled: false on the button (or use onPressed: null to disable), add Tooltip('Voice recording coming soon') wrapper around it, and update VoiceInputButton styling to show a grayed-out state when disabled",
+    "Update lib/screens/pesatrack_ai/pesatrack_ai_page.dart to pass disabled state or null callback to ChatInputArea for voice button, ensuring tapping does nothing rather than crashing"
+  ],
+  "acceptance_criteria": [
+    "No duplicate imports in pesatrack_ai_page.dart (flutter analyze passes)",
+    "sendMessage method in pesatrack_ai_provider.dart is single, well-formed, and handles all error cases with specific error messages",
+    "Microphone button is visually disabled (grayed out or low opacity) and shows 'Voice recording coming soon' tooltip on hover",
+    "Tapping microphone button does not crash or throw errors (onPressed is null or no-op)",
+    "All error messages displayed to user are specific and helpful"
+  ],
+  "verification": [
+    "Run `flutter analyze` — no imports or lints errors",
+    "Run `flutter pub get` to fetch dependencies",
+    "Build and run: `flutter run --debug` on emulator/device",
+    "Navigate to PesaTrack AI chat page, verify welcome screen shows, tap microphone button and confirm no crash and tooltip appears",
+    "In chat, send a message and confirm specific error messages appear if network/Hive failures occur (manually verify by reviewing code and testing with intentional failures if possible)",
+    "Commit changes locally with message 'fix: resolve PesaTrack AI MVP review blockers'"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

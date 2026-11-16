@@ -1,12 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/routes/app_router.dart';
+import '../../core/providers/auth_provider.dart';
+import '../../core/providers/pesatrack_ai_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  void _logout(BuildContext context) {
+    context.read<AuthProvider>().logout();
+    context.read<PesaTrackAIProvider>().clearUserSession();
+
+    if (context.mounted) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.login,
+        (route) => false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+    final currentUser = authProvider.currentUser;
+    final currentUserName = currentUser?.name.trim() ?? '';
+    final initials = currentUserName.isNotEmpty
+        ? currentUserName
+              .split(RegExp(r'\s+'))
+              .where((part) => part.isNotEmpty)
+              .take(2)
+              .map((part) => part[0].toUpperCase())
+              .join()
+        : 'U';
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F3),
       appBar: AppBar(
@@ -30,22 +58,19 @@ class ProfileScreen extends StatelessWidget {
                   gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF08A71D),
-                      Color.fromARGB(255, 9, 66, 14),
-                    ],
+                    colors: [Color(0xFF08A71D), Color.fromARGB(255, 9, 66, 14)],
                   ),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 40,
                       backgroundColor: Colors.white,
                       child: Text(
-                        'JD',
-                        style: TextStyle(
+                        initials,
+                        style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF08A71D),
@@ -53,18 +78,18 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'John Doe',
-                      style: TextStyle(
+                    Text(
+                      currentUser?.name ?? 'User',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'john.doe@example.com',
-                      style: TextStyle(
+                    Text(
+                      currentUser?.email ?? 'user@example.com',
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 14,
                       ),
@@ -143,10 +168,7 @@ class ProfileScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: ListTile(
-                leading: const Icon(
-                  Icons.logout_outlined,
-                  color: Colors.red,
-                ),
+                leading: const Icon(Icons.logout_outlined, color: Colors.red),
                 title: const Text(
                   'Sign Out',
                   style: TextStyle(color: Colors.red),
@@ -156,8 +178,7 @@ class ProfileScreen extends StatelessWidget {
                     context: context,
                     builder: (context) => AlertDialog(
                       title: const Text('Sign Out'),
-                      content:
-                          const Text('Are you sure you want to sign out?'),
+                      content: const Text('Are you sure you want to sign out?'),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
@@ -166,11 +187,7 @@ class ProfileScreen extends StatelessWidget {
                         FilledButton(
                           onPressed: () {
                             Navigator.pop(context);
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              AppRoutes.login,
-                              (_) => false,
-                            );
+                            _logout(context);
                           },
                           style: FilledButton.styleFrom(
                             backgroundColor: Colors.red,

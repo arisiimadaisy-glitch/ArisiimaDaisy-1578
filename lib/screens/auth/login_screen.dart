@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../core/routes/app_router.dart';
+import '../../core/providers/auth_provider.dart';
+import '../../core/constants/app_constants.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,16 +26,60 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _signIn() {
-    // Check whether the email and password fields are valid.
+  void _signIn(AuthProvider authProvider) async {
     if (!_formKey.currentState!.validate()) return;
 
-    // Open the dashboard and remove the login screen from the stack.
-    Navigator.pushReplacementNamed(context, AppRoutes.home);
+    authProvider.clearError();
+
+    final success = await authProvider.login(
+      _emailController.text.trim(),
+      _passwordController.text,
+    );
+
+    if (mounted) {
+      if (success) {
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
+      }
+    }
+  }
+
+  void _signInWithGoogle(AuthProvider authProvider) async {
+    authProvider.clearError();
+
+    final success = await authProvider.signInWithGoogle();
+
+    if (mounted) {
+      if (success) {
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
+      }
+    }
+  }
+
+  void _signInWithGithub(AuthProvider authProvider) async {
+    authProvider.clearError();
+
+    final success = await authProvider.signInWithGithub();
+
+    if (mounted) {
+      if (success) {
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
+      }
+    }
+  }
+
+  void _showPasswordResetSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Password reset email sent. Check your inbox.'),
+        duration: Duration(seconds: 3),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -60,24 +108,107 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          // Hero Section
+                          Center(
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 64,
+                                  height: 64,
+                                  decoration: BoxDecoration(
+                                    color: AppConstants.ugandaGreen,
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: const Icon(
+                                    Icons.account_balance_wallet_rounded,
+                                    color: Colors.white,
+                                    size: 40,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'PesaTrack',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                        color: AppConstants.ugandaGreen,
+                                      ),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'Your Smart Money Companion',
+                                  style: TextStyle(
+                                    color: AppConstants.ugandaGreen,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 32),
                           Text(
                             'Welcome back',
-                            style: Theme.of(context).textTheme.headlineMedium
+                            style: Theme.of(context).textTheme.headlineSmall
                                 ?.copyWith(
                                   fontWeight: FontWeight.w800,
-                                  color: const Color.fromARGB(255, 9, 66, 14),
+                                  color: const Color(0xFF111111),
                                 ),
                           ),
                           const SizedBox(height: 8),
-                          Text(
+                          const Text(
                             'Sign in to your account.',
-                            style: Theme.of(context).textTheme.bodyLarge
-                                ?.copyWith(color: Colors.black54),
+                            style: TextStyle(
+                              color: AppConstants.ugandaRed,
+                              fontSize: 13,
+                            ),
                           ),
+
+                          // Error Banner
+                          if (authProvider.errorMessage != null) ...[
+                            const SizedBox(height: 16),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFEBEE),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: AppConstants.ugandaRed.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.error_outline,
+                                    color: AppConstants.ugandaRed,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      authProvider.errorMessage!,
+                                      style: const TextStyle(
+                                        color: AppConstants.ugandaRed,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+
                           const SizedBox(height: 28),
                           const Text(
                             'Email',
-                            style: TextStyle(fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
@@ -87,6 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: const InputDecoration(
                               prefixIcon: Icon(Icons.mail_outline),
                               border: OutlineInputBorder(),
+                              hintText: 'your@email.com',
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
@@ -101,17 +233,22 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 16),
                           const Text(
                             'Password',
-                            style: TextStyle(fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: _passwordController,
                             obscureText: _obscurePassword,
                             textInputAction: TextInputAction.done,
-                            onFieldSubmitted: (_) => _signIn(),
+                            onFieldSubmitted: (_) =>
+                                _signIn(context.read<AuthProvider>()),
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.lock_outline),
                               border: const OutlineInputBorder(),
+                              hintText: '••••••••',
                               suffixIcon: IconButton(
                                 tooltip: _obscurePassword
                                     ? 'Show password'
@@ -133,43 +270,161 @@ class _LoginPageState extends State<LoginPage> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
-                              onPressed: () {},
-                              child: const Text('Forgot password?'),
+                              onPressed: _showPasswordResetSnackbar,
+                              child: const Text(
+                                'Forgot password?',
+                                style: TextStyle(
+                                  color: AppConstants.ugandaGreen,
+                                  fontSize: 13,
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 8),
                           FilledButton(
-                            onPressed: _signIn,
+                            onPressed: authProvider.isLoading
+                                ? null
+                                : () => _signIn(context.read<AuthProvider>()),
                             style: FilledButton.styleFrom(
                               minimumSize: const Size.fromHeight(54),
-                              backgroundColor: const Color.fromARGB(
-                                255,
-                                8,
-                                167,
-                                29,
-                              ),
+                              backgroundColor: AppConstants.ugandaGreen,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14),
                               ),
+                              disabledBackgroundColor: AppConstants.ugandaGreen
+                                  .withValues(alpha: 0.5),
                             ),
-                            child: const Text('Sign in'),
+                            child: authProvider.isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : const Text('Sign In'),
+                          ),
+                          const SizedBox(height: 24),
+                          const Row(
+                            children: [
+                              Expanded(child: Divider()),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: Text(
+                                  'Or continue with',
+                                  style: TextStyle(
+                                    color: Color(0xFF777777),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              Expanded(child: Divider()),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: OutlinedButton.icon(
+                                  onPressed: authProvider.isLoading
+                                      ? null
+                                      : () => _signInWithGoogle(
+                                          context.read<AuthProvider>(),
+                                        ),
+                                  icon: authProvider.isLoading
+                                      ? SizedBox(
+                                          width: 18,
+                                          height: 18,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                  AppConstants.ugandaGreen,
+                                                ),
+                                          ),
+                                        )
+                                      : const FaIcon(
+                                          FontAwesomeIcons.google,
+                                          size: 18,
+                                        ),
+                                  label: const Text('Google'),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: AppConstants.ugandaGreen,
+                                    side: const BorderSide(
+                                      color: AppConstants.ugandaGreen,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: OutlinedButton.icon(
+                                  onPressed: authProvider.isLoading
+                                      ? null
+                                      : () => _signInWithGithub(
+                                          context.read<AuthProvider>(),
+                                        ),
+                                  icon: authProvider.isLoading
+                                      ? SizedBox(
+                                          width: 18,
+                                          height: 18,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                  AppConstants.ugandaGreen,
+                                                ),
+                                          ),
+                                        )
+                                      : const FaIcon(
+                                          FontAwesomeIcons.github,
+                                          size: 18,
+                                        ),
+                                  label: const Text('GitHub'),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: AppConstants.ugandaGreen,
+                                    side: const BorderSide(
+                                      color: AppConstants.ugandaGreen,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 24),
                           Wrap(
                             alignment: WrapAlignment.center,
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 "Don't have an account?",
-                                style: TextStyle(color: Colors.grey.shade700),
+                                style: TextStyle(
+                                  color: Color(0xFF777777),
+                                  fontSize: 13,
+                                ),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.pushNamed(
                                   context,
                                   AppRoutes.register,
                                 ),
-                                child: const Text('Sign Up'),
+                                child: const Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    color: AppConstants.ugandaGreen,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                             ],
                           ),

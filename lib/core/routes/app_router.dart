@@ -12,6 +12,7 @@ import '../../screens/categories/categories_screen.dart';
 import '../../screens/reports/reports_screen.dart';
 import '../../screens/settings/settings_screen.dart';
 import '../../screens/profile/profile_screen.dart';
+import '../../screens/pesatrack_ai/pesatrack_ai_page.dart';
 
 /// Named route constants for the app
 class AppRoutes {
@@ -29,6 +30,7 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String reports = '/reports';
   static const String profile = '/profile';
+  static const String pesatrackAI = '/pesatrack-ai';
 }
 
 /// App router class to handle navigation
@@ -113,6 +115,12 @@ class AppRouter {
       case AppRoutes.profile:
         return MaterialPageRoute(
           builder: (_) => const ProfileScreen(),
+          settings: settings,
+        );
+
+      case AppRoutes.pesatrackAI:
+        return MaterialPageRoute(
+          builder: (_) => const PesaTrackAIPage(),
           settings: settings,
         );
 
