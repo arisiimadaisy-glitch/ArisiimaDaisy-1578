@@ -1,0 +1,28 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "pesatracker-55392",
+          "appId": "1:941533041473:android:14275607b69fe6d51ac7c0",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "pesatracker-55392",
+          "configurations": {
+            "android": "1:941533041473:android:14275607b69fe6d51ac7c0",
+            "ios": "1:941533041473:ios:92e16c72a81589fa1ac7c0",
+            "macos": "1:941533041473:ios:92e16c72a81589fa1ac7c0",
+            "web": "1:941533041473:web:83aed25f7e6c4fb51ac7c0",
+            "windows": "1:941533041473:web:a9fece067c5948691ac7c0"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  }
+}

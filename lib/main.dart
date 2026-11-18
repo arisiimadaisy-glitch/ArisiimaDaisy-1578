@@ -23,15 +23,11 @@ void main() async {
   // Open the Hive box for chat history
   await Hive.openBox<String>(PesaTrackAIConstants.hiveChatBoxName);
 
-  // Initialize Firebase after running: flutterfire configure
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } catch (e) {
-    // Firebase initialization failed - may need flutterfire configure
-    debugPrint('Firebase initialization error: $e');
-  }
+  // Firebase must be configured with this project's real options before auth
+  // providers are created. Let initialization errors stop startup visibly.
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(const MyApp());
 }

@@ -22,6 +22,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   int _passwordStrengthScore = 0;
+  bool _isEmailLoading = false;
+  bool _isGoogleLoading = false;
+  bool _isGithubLoading = false;
 
   @override
   void dispose() {
@@ -84,6 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _register(AuthProvider authProvider) async {
+    if (authProvider.isLoading) return;
     if (!_formKey.currentState!.validate()) return;
 
     if (_passwordStrengthScore < 5) {
@@ -96,42 +100,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    authProvider.clearError();
+    setState(() => _isEmailLoading = true);
+    try {
+      authProvider.clearError();
+      final success = await authProvider.register(
+        _emailController.text.trim(),
+        _passwordController.text,
+        _nameController.text.trim(),
+      );
 
-    final success = await authProvider.register(
-      _emailController.text.trim(),
-      _passwordController.text,
-      _nameController.text.trim(),
-    );
-
-    if (mounted) {
-      if (success) {
+      if (mounted && success) {
         Navigator.pushReplacementNamed(context, AppRoutes.home);
       }
+    } finally {
+      if (mounted) setState(() => _isEmailLoading = false);
     }
   }
 
   void _signUpWithGoogle(AuthProvider authProvider) async {
-    authProvider.clearError();
+    if (authProvider.isLoading) return;
+    setState(() => _isGoogleLoading = true);
+    try {
+      authProvider.clearError();
 
-    final success = await authProvider.signInWithGoogle();
+      final success = await authProvider.signInWithGoogle();
 
-    if (mounted) {
-      if (success) {
+      if (mounted && success) {
         Navigator.pushReplacementNamed(context, AppRoutes.home);
       }
+    } finally {
+      if (mounted) setState(() => _isGoogleLoading = false);
     }
   }
 
   void _signUpWithGithub(AuthProvider authProvider) async {
-    authProvider.clearError();
+    if (authProvider.isLoading) return;
+    setState(() => _isGithubLoading = true);
+    try {
+      authProvider.clearError();
 
-    final success = await authProvider.signInWithGithub();
+      final success = await authProvider.signInWithGithub();
 
-    if (mounted) {
-      if (success) {
+      if (mounted && success) {
         Navigator.pushReplacementNamed(context, AppRoutes.home);
       }
+    } finally {
+      if (mounted) setState(() => _isGithubLoading = false);
     }
   }
 
@@ -481,7 +495,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               disabledBackgroundColor: AppConstants.ugandaGreen
                                   .withValues(alpha: 0.5),
                             ),
-                            child: authProvider.isLoading
+                            child: _isEmailLoading
                                 ? const SizedBox(
                                     height: 20,
                                     width: 20,
@@ -512,76 +526,76 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ],
                           ),
                           const SizedBox(height: 16),
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  onPressed: authProvider.isLoading
-                                      ? null
-                                      : () => _signUpWithGoogle(
-                                          context.read<AuthProvider>(),
+                              OutlinedButton.icon(
+                                onPressed: authProvider.isLoading
+                                    ? null
+                                    : () => _signUpWithGoogle(
+                                        context.read<AuthProvider>(),
+                                      ),
+                                icon: _isGoogleLoading
+                                    ? const SizedBox(
+                                        width: 18,
+                                        height: 18,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Color(0xFF4285F4),
+                                              ),
                                         ),
-                                  icon: authProvider.isLoading
-                                      ? SizedBox(
-                                          width: 18,
-                                          height: 18,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                                  AppConstants.ugandaGreen,
-                                                ),
-                                          ),
-                                        )
-                                      : const FaIcon(
-                                          FontAwesomeIcons.google,
-                                          size: 18,
-                                        ),
-                                  label: const Text('Google'),
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: AppConstants.ugandaGreen,
-                                    side: const BorderSide(
-                                      color: AppConstants.ugandaGreen,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                    ),
+                                      )
+                                    : const FaIcon(
+                                        FontAwesomeIcons.google,
+                                        color: Color(0xFF4285F4),
+                                        size: 18,
+                                      ),
+                                label: const Text('Continue with Google'),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: const Color(0xFF3C4043),
+                                  backgroundColor: Colors.white,
+                                  minimumSize: const Size.fromHeight(48),
+                                  side: const BorderSide(
+                                    color: Color(0xFFDADCE0),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  onPressed: authProvider.isLoading
-                                      ? null
-                                      : () => _signUpWithGithub(
-                                          context.read<AuthProvider>(),
+                              const SizedBox(height: 12),
+                              OutlinedButton.icon(
+                                onPressed: authProvider.isLoading
+                                    ? null
+                                    : () => _signUpWithGithub(
+                                        context.read<AuthProvider>(),
+                                      ),
+                                icon: _isGithubLoading
+                                    ? SizedBox(
+                                        width: 18,
+                                        height: 18,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                AppConstants.ugandaGreen,
+                                              ),
                                         ),
-                                  icon: authProvider.isLoading
-                                      ? SizedBox(
-                                          width: 18,
-                                          height: 18,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                                  AppConstants.ugandaGreen,
-                                                ),
-                                          ),
-                                        )
-                                      : const FaIcon(
-                                          FontAwesomeIcons.github,
-                                          size: 18,
-                                        ),
-                                  label: const Text('GitHub'),
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: AppConstants.ugandaGreen,
-                                    side: const BorderSide(
-                                      color: AppConstants.ugandaGreen,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                    ),
+                                      )
+                                    : const FaIcon(
+                                        FontAwesomeIcons.github,
+                                        size: 18,
+                                      ),
+                                label: const Text('GitHub'),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: AppConstants.ugandaGreen,
+                                  side: const BorderSide(
+                                    color: AppConstants.ugandaGreen,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14),
                                   ),
                                 ),
                               ),

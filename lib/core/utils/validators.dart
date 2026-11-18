@@ -68,7 +68,10 @@ class Validators {
 
   /// Validate that passwords match
   /// Returns error message if they don't match, null if they do
-  static String? validatePasswordMatch(String? password, String? confirmPassword) {
+  static String? validatePasswordMatch(
+    String? password,
+    String? confirmPassword,
+  ) {
     if (confirmPassword == null || confirmPassword.isEmpty) {
       return 'Please confirm your password';
     }
@@ -89,8 +92,8 @@ class Validators {
 
     final trimmedValue = value.trim();
 
-    // Remove currency symbols and thousand separators
-    final cleanValue = trimmedValue.replaceAll(RegExp(r'[^\d.]'), '');
+    // Remove currency symbols and grouping separators while preserving signs.
+    final cleanValue = trimmedValue.replaceAll(RegExp(r'[^0-9.-]'), '');
 
     final amount = double.tryParse(cleanValue);
 
@@ -107,7 +110,10 @@ class Validators {
 
   /// Validate required field
   /// Returns error message if empty, null if valid
-  static String? validateRequired(String? value, {String fieldName = 'This field'}) {
+  static String? validateRequired(
+    String? value, {
+    String fieldName = 'This field',
+  }) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
     }
@@ -178,7 +184,10 @@ class Validators {
 
   /// Validate that value is a positive integer
   /// Returns error message if invalid, null if valid
-  static String? validatePositiveInteger(String? value, {String fieldName = 'Value'}) {
+  static String? validatePositiveInteger(
+    String? value, {
+    String fieldName = 'Value',
+  }) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
     }
@@ -198,7 +207,11 @@ class Validators {
 
   /// Validate minimum length
   /// Returns error message if invalid, null if valid
-  static String? validateMinLength(String? value, int minLength, {String fieldName = 'This field'}) {
+  static String? validateMinLength(
+    String? value,
+    int minLength, {
+    String fieldName = 'This field',
+  }) {
     if (value == null || value.isEmpty) {
       return '$fieldName is required';
     }
@@ -212,7 +225,11 @@ class Validators {
 
   /// Validate maximum length
   /// Returns error message if invalid, null if valid
-  static String? validateMaxLength(String? value, int maxLength, {String fieldName = 'This field'}) {
+  static String? validateMaxLength(
+    String? value,
+    int maxLength, {
+    String fieldName = 'This field',
+  }) {
     if (value == null) return null;
 
     if (value.length > maxLength) {

@@ -1,47 +1,103 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
-import 'package:login_app/main.dart';
-import 'package:login_app/src/dashboard.dart';
+import 'package:login_app/core/providers/auth_provider.dart';
+import 'package:login_app/core/routes/app_router.dart';
+import 'package:login_app/data/models/user_model.dart';
+import 'package:login_app/screens/auth/login_screen.dart';
 
 void main() {
-  testWidgets('renders the login form', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('shows validation errors for an empty login form', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(_buildLoginApp(_FakeAuthProvider()));
 
     expect(find.text('Welcome back'), findsOneWidget);
     expect(find.text('Email'), findsOneWidget);
     expect(find.text('Password'), findsOneWidget);
-    expect(find.text('Sign in'), findsOneWidget);
+    expect(find.text('Sign In'), findsOneWidget);
 
-    await tester.tap(find.text('Sign in'));
-    await tester.pump();
+    await tester.tap(find.text('Sign In'));
+    await tester.pumpAndSettle();
 
     expect(find.text('Enter your email address'), findsOneWidget);
   });
 
-  testWidgets('signing in opens spending insights', (
+  testWidgets('successful login opens the dashboard', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(const MyApp());
+    final authProvider = _FakeAuthProvider();
+    await tester.pumpWidget(_buildLoginApp(authProvider));
 
     await tester.enterText(
       find.byType(TextFormField).at(0),
       'daisy@example.com',
     );
     await tester.enterText(find.byType(TextFormField).at(1), 'password123');
-    await tester.tap(find.text('Sign in'));
+    await tester.tap(find.text('Sign In'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(DashboardPage), findsOneWidget);
-    expect(find.text('Spending insights'), findsOneWidget);
-    expect(find.text('£305.43'), findsOneWidget);
+    expect(authProvider.lastEmail, 'daisy@example.com');
+    expect(authProvider.lastPassword, 'password123');
+    expect(find.text('Dashboard opened'), findsOneWidget);
   });
+}
+
+Widget _buildLoginApp(_FakeAuthProvider authProvider) {
+  return ChangeNotifierProvider<AuthProvider>.value(
+    value: authProvider,
+    child: MaterialApp(
+      home: const LoginPage(),
+      onGenerateRoute: (settings) {
+        if (settings.name == AppRoutes.home) {
+          return MaterialPageRoute<void>(
+            builder: (_) =>
+                const Scaffold(body: Center(child: Text('Dashboard opened'))),
+          );
+        }
+        return null;
+      },
+    ),
+  );
+}
+
+class _FakeAuthProvider extends ChangeNotifier implements AuthProvider {
+  String? lastEmail;
+  String? lastPassword;
+
+  @override
+  User? get currentUser => null;
+
+  @override
+  String? get errorMessage => null;
+
+  @override
+  bool get isAuthenticated => false;
+
+  @override
+  bool get isLoading => false;
+
+  @override
+  void clearError() {}
+
+  @override
+  Future<bool> login(String email, String password) async {
+    lastEmail = email;
+    lastPassword = password;
+    return true;
+  }
+
+  @override
+  Future<bool> register(String email, String password, String name) async =>
+      false;
+
+  @override
+  Future<bool> signInWithGithub() async => false;
+
+  @override
+  Future<bool> signInWithGoogle() async => false;
+
+  @override
+  Future<void> logout() async {}
 }

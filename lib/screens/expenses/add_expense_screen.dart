@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/constants/app_constants.dart';
+import '../../core/providers/auth_provider.dart';
+import '../../data/models/transaction_model.dart';
+import '../../data/repositories/transaction_repository.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   const AddExpenseScreen({super.key});
@@ -19,6 +23,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   ExpenseCategory? _selectedCategory;
   String? _selectedPaymentMethod;
   DateTime _selectedDate = DateTime.now();
+  bool _isSaving = false;
+  final TransactionRepository _transactionRepository = TransactionRepository();
 
   final List<String> _paymentMethods = [
     'Cash',
@@ -56,13 +62,41 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     }
   }
 
-  void _saveExpense() {
+  Future<void> _saveExpense() async {
     if (!_formKey.currentState!.validate()) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Expense saved successfully!')),
-    );
-    Navigator.pop(context);
+    final userId = context.read<AuthProvider>().currentUser?.id;
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Sign in before saving an expense.')),
+      );
+      return;
+    }
+
+    setState(() => _isSaving = true);
+    try {
+      await _transactionRepository.create(
+        Transaction(
+          id: '',
+          userId: userId,
+          type: TransactionType.expense,
+          amount: double.parse(_amountController.text.trim()),
+          category: _selectedCategory!.name,
+          date: _selectedDate,
+          paymentMethod: _selectedPaymentMethod ?? 'Unspecified',
+          description: _descriptionController.text.trim(),
+        ),
+      );
+
+      if (mounted) Navigator.pop(context, true);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Could not save expense: $error')));
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
   }
 
   @override
@@ -210,7 +244,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     ),
                     const SizedBox(height: 24),
                     FilledButton(
-                      onPressed: _saveExpense,
+                      onPressed: _isSaving ? null : _saveExpense,
                       style: FilledButton.styleFrom(
                         minimumSize: const Size.fromHeight(54),
                         backgroundColor: const Color.fromARGB(255, 8, 167, 29),
@@ -219,7 +253,18 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      child: const Text('Save Expense'),
+                      child: _isSaving
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                          : const Text('Save Expense'),
                     ),
                   ],
                 ),

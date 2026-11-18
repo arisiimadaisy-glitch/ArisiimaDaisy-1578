@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "941533041473",
+    "project_id": "pesatracker-55392",
+    "storage_bucket": "pesatracker-55392.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941533041473:android:14275607b69fe6d51ac7c0",
+        "android_client_info": {
+          "package_name": "com.example.login_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "941533041473-71vuqakl64ft61g8sn87mhs0dkhihkjk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.login_app",
+            "certificate_hash": "0faecc34c4e1ade9b55edf460adf24aea4a1b1b2"
+          }
+        },
+        {
+          "client_id": "941533041473-31lqis0d6i98hb18arcil26m79vfq7r8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCENuEbC-e_Y_r3CTa1WmNP6ckDqg5Dhz8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "941533041473-31lqis0d6i98hb18arcil26m79vfq7r8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "941533041473-o3n11dql0bcbvq1ciilkoq4gi9crbe9f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.loginApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

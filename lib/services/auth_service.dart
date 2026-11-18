@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../data/models/user_model.dart';
 
 class AuthService {
@@ -19,7 +21,10 @@ class AuthService {
   Stream<User?> userStateChanges() {
     return _auth.authStateChanges().map((fbUser) {
       if (fbUser == null) return null;
-      return User.fromFirebaseUser(fbUser, _getProviderFromFirebaseUser(fbUser));
+      return User.fromFirebaseUser(
+        fbUser,
+        _getProviderFromFirebaseUser(fbUser),
+      );
     });
   }
 
@@ -30,7 +35,7 @@ class AuthService {
         email: email,
         password: password,
       );
-      
+
       if (result.user != null) {
         await _storeOrUpdateUser(result.user!, 'email');
         return User.fromFirebaseUser(result.user!, 'email');
@@ -56,11 +61,14 @@ class AuthService {
       if (result.user != null) {
         // Update display name
         await result.user!.updateDisplayName(name);
-        
+
         // Store user in Firestore
         await _storeOrUpdateUser(result.user!, 'email', name: name);
-        
-        return User.fromFirebaseUser(result.user!, 'email');
+
+        return User.fromFirebaseUser(
+          result.user!,
+          'email',
+        ).copyWith(name: name.trim());
       }
       return null;
     } on firebase_auth.FirebaseAuthException catch (e) {
@@ -71,16 +79,22 @@ class AuthService {
   /// Sign in with Google
   Future<User?> signInWithGoogle() async {
     try {
-      final googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null;
+      late final firebase_auth.UserCredential result;
+      if (kIsWeb) {
+        result = await _auth.signInWithPopup(
+          firebase_auth.GoogleAuthProvider(),
+        );
+      } else {
+        final googleUser = await _googleSignIn.signIn();
+        if (googleUser == null) return null;
 
-      final googleAuth = await googleUser.authentication;
-      final credential = firebase_auth.GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-        accessToken: googleAuth.accessToken,
-      );
-
-      final result = await _auth.signInWithCredential(credential);
+        final googleAuth = await googleUser.authentication;
+        final credential = firebase_auth.GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+          accessToken: googleAuth.accessToken,
+        );
+        result = await _auth.signInWithCredential(credential);
+      }
 
       if (result.user != null) {
         await _storeOrUpdateUser(result.user!, 'google');
@@ -98,7 +112,9 @@ class AuthService {
   Future<User?> signInWithGithub() async {
     try {
       final provider = firebase_auth.GithubAuthProvider();
-      final result = await _auth.signInWithProvider(provider);
+      final result = kIsWeb
+          ? await _auth.signInWithPopup(provider)
+          : await _auth.signInWithProvider(provider);
 
       if (result.user != null) {
         await _storeOrUpdateUser(result.user!, 'github');
@@ -168,16 +184,16 @@ class AuthService {
         'lastLogin': DateTime.now().toIso8601String(),
       });
     } else {
-      await docRef.update({
-        'lastLogin': DateTime.now().toIso8601String(),
-      });
+      await docRef.update({'lastLogin': DateTime.now().toIso8601String()});
     }
   }
 
   /// Get auth provider from Firebase User
   String _getProviderFromFirebaseUser(firebase_auth.User fbUser) {
-    if (fbUser.providerData.any((p) => p.providerId == 'google.com')) return 'google';
-    if (fbUser.providerData.any((p) => p.providerId == 'github.com')) return 'github';
+    if (fbUser.providerData.any((p) => p.providerId == 'google.com'))
+      return 'google';
+    if (fbUser.providerData.any((p) => p.providerId == 'github.com'))
+      return 'github';
     return 'email';
   }
 }
